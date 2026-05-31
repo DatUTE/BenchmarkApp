@@ -1,0 +1,198 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!-- ════════════════════════════════════════════════════════════════
+       Card panels
+  ════════════════════════════════════════════════════════════════ -->
+  <Style Selector="Border.Card">
+    <Setter Property="Background"    Value="#16213E"/>
+    <Setter Property="BorderBrush"   Value="#0F3460"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius"  Value="8"/>
+    <Setter Property="Padding"       Value="16"/>
+  </Style>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       Navigation buttons (sidebar)
+  ════════════════════════════════════════════════════════════════ -->
+  <Style Selector="Button.NavButton">
+    <Setter Property="Background"    Value="Transparent"/>
+    <Setter Property="Foreground"    Value="#AAAACC"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="HorizontalContentAlignment" Value="Left"/>
+    <Setter Property="Padding"       Value="12,10"/>
+    <Setter Property="Width"         Value="196"/>
+    <Setter Property="CornerRadius"  Value="6"/>
+    <Setter Property="Cursor"        Value="Hand"/>
+    <Setter Property="Transitions">
+      <Transitions>
+        <BrushTransition Property="Background" Duration="0:0:0.15"/>
+      </Transitions>
+    </Setter>
+  </Style>
+
+  <Style Selector="Button.NavButton:pointerover">
+    <Setter Property="Background" Value="#1E2A4A"/>
+    <Setter Property="Foreground" Value="#E2E2F0"/>
+  </Style>
+
+  <Style Selector="Button.NavButton.NavActive">
+    <Setter Property="Background" Value="#0F3460"/>
+    <Setter Property="Foreground" Value="#4FC3F7"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+  </Style>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       Action buttons
+  ════════════════════════════════════════════════════════════════ -->
+  <Style Selector="Button.PrimaryButton">
+    <Setter Property="Background"    Value="#E94560"/>
+    <Setter Property="Foreground"    Value="White"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="CornerRadius"  Value="6"/>
+    <Setter Property="Padding"       Value="16,10"/>
+    <Setter Property="Cursor"        Value="Hand"/>
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="Transitions">
+      <Transitions>
+        <BrushTransition Property="Background" Duration="0:0:0.15"/>
+      </Transitions>
+    </Setter>
+  </Style>
+
+  <Style Selector="Button.PrimaryButton:pointerover">
+    <Setter Property="Background" Value="#C73752"/>
+  </Style>
+
+  <Style Selector="Button.PrimaryButton:disabled">
+    <Setter Property="Background" Value="#5A2233"/>
+    <Setter Property="Foreground" Value="#888888"/>
+  </Style>
+
+  <Style Selector="Button.SecondaryButton">
+    <Setter Property="Background"    Value="#1E2A4A"/>
+    <Setter Property="Foreground"    Value="#AAAACC"/>
+    <Setter Property="BorderBrush"   Value="#0F3460"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius"  Value="6"/>
+    <Setter Property="Padding"       Value="12,8"/>
+    <Setter Property="Cursor"        Value="Hand"/>
+  </Style>
+
+  <Style Selector="Button.SecondaryButton:pointerover">
+    <Setter Property="Background" Value="#263558"/>
+    <Setter Property="Foreground" Value="#E2E2F0"/>
+  </Style>
+
+  <Style Selector="Button.ActionButton">
+    <Setter Property="Background"    Value="#0F3460"/>
+    <Setter Property="Foreground"    Value="#4FC3F7"/>
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="CornerRadius"  Value="6"/>
+    <Setter Property="Padding"       Value="12,8"/>
+    <Setter Property="Cursor"        Value="Hand"/>
+  </Style>
+
+  <Style Selector="Button.ActionButton:pointerover">
+    <Setter Property="Background" Value="#163A70"/>
+  </Style>
+
+  <Style Selector="Button.DangerButton">
+    <Setter Property="Background"    Value="#3A1A1A"/>
+    <Setter Property="Foreground"    Value="#F44336"/>
+    <Setter Property="BorderBrush"   Value="#F44336"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius"  Value="6"/>
+    <Setter Property="Padding"       Value="12,8"/>
+    <Setter Property="Cursor"        Value="Hand"/>
+  </Style>
+
+  <Style Selector="Button.DangerButton:pointerover">
+    <Setter Property="Background" Value="#5A2020"/>
+  </Style>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       Input controls
+  ════════════════════════════════════════════════════════════════ -->
+  <Style Selector="TextBox.SearchBox">
+    <Setter Property="Background"     Value="#0D1B2E"/>
+    <Setter Property="Foreground"     Value="#E2E2F0"/>
+    <Setter Property="BorderBrush"    Value="#0F3460"/>
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="CornerRadius"   Value="6"/>
+    <Setter Property="Padding"        Value="10,6"/>
+    <Setter Property="CaretBrush"     Value="#4FC3F7"/>
+  </Style>
+
+  <Style Selector="TextBox.SearchBox:focus">
+    <Setter Property="BorderBrush" Value="#4FC3F7"/>
+  </Style>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       Metric card text styles
+  ════════════════════════════════════════════════════════════════ -->
+  <Style Selector="TextBlock.MetricLabel">
+    <Setter Property="FontSize"   Value="11"/>
+    <Setter Property="Foreground" Value="#666688"/>
+    <Setter Property="VerticalAlignment" Value="Center"/>
+  </Style>
+
+  <Style Selector="TextBlock.MetricValue">
+    <Setter Property="FontSize"   Value="13"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="#4FC3F7"/>
+    <Setter Property="HorizontalAlignment" Value="Right"/>
+    <Setter Property="VerticalAlignment"   Value="Center"/>
+  </Style>
+
+  <Style Selector="TextBlock.MetricValueB">
+    <Setter Property="FontSize"   Value="13"/>
+    <Setter Property="FontWeight" Value="SemiBold"/>
+    <Setter Property="Foreground" Value="#FFB74D"/>
+    <Setter Property="HorizontalAlignment" Value="Right"/>
+    <Setter Property="VerticalAlignment"   Value="Center"/>
+  </Style>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       ListBox items (dark theme)
+  ════════════════════════════════════════════════════════════════ -->
+  <Style Selector="ListBoxItem">
+    <Setter Property="Padding"       Value="8,4"/>
+    <Setter Property="CornerRadius"  Value="4"/>
+    <Setter Property="Foreground"    Value="#E2E2F0"/>
+  </Style>
+
+  <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter">
+    <Setter Property="Background" Value="#1E2A4A"/>
+  </Style>
+
+  <Style Selector="ListBoxItem:selected /template/ ContentPresenter">
+    <Setter Property="Background" Value="#0F3460"/>
+  </Style>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       Separator
+  ════════════════════════════════════════════════════════════════ -->
+  <Style Selector="Separator">
+    <Setter Property="Background" Value="#333355"/>
+    <Setter Property="Height"     Value="1"/>
+    <Setter Property="Margin"     Value="0,4"/>
+  </Style>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       ProgressBar
+  ════════════════════════════════════════════════════════════════ -->
+  <Style Selector="ProgressBar">
+    <Setter Property="Background" Value="#0D1B2E"/>
+    <Setter Property="Foreground" Value="#4FC3F7"/>
+    <Setter Property="CornerRadius" Value="2"/>
+  </Style>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       RadioButton
+  ════════════════════════════════════════════════════════════════ -->
+  <Style Selector="RadioButton">
+    <Setter Property="Padding" Value="8,0,0,0"/>
+  </Style>
+
+</Styles>

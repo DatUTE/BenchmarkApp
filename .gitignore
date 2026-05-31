@@ -1,0 +1,38 @@
+# Visual Studio / Rider
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Cursor / Claude local settings
+.claude/
+
+# CMake / MSVC native build
+Benchmark.Core/build/
+**/CMakeFiles/
+**/CMakeCache.txt
+**/cmake_install.cmake
+**/*.vcxproj
+**/*.vcxproj.filters
+**/x64/
+**/Debug/
+**/Release/
+!Benchmark.Core/src/
+!Benchmark.Core/include/
+
+# .NET build output
+bin/
+obj/
+*.dll
+*.pdb
+*.exe
+!Benchmark.Core/src/
+
+# Keep source; ignore copied native DLL in UI output only via bin/ above
+
+# OS / editor
+Thumbs.db
+Desktop.ini
+*.swp
+*~

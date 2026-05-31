@@ -1,0 +1,217 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Benchmark.UI.ViewModels"
+             xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="Benchmark.UI.Views.DashboardView"
+             x:DataType="vm:DashboardViewModel">
+
+  <DockPanel LastChildFill="True">
+
+    <!-- ══════════════════════════════════════════════════════════════
+         Top bar — status + controls
+    ══════════════════════════════════════════════════════════════ -->
+    <Border DockPanel.Dock="Top"
+            Background="#16213E"
+            Padding="24,10">
+      <Grid ColumnDefinitions="*,Auto,Auto,Auto">
+
+        <StackPanel Grid.Column="0" Spacing="2">
+          <TextBlock Text="Live Dashboard"
+                     FontSize="18" FontWeight="Bold" Foreground="#E2E2F0"/>
+          <TextBlock Text="{Binding StatusMessage}"
+                     FontSize="11" Foreground="#8888AA"/>
+        </StackPanel>
+
+        <TextBlock Grid.Column="1"
+                   Text="● LIVE"
+                   IsVisible="{Binding IsRunning}"
+                   Foreground="#4CAF50"
+                   FontWeight="Bold"
+                   VerticalAlignment="Center"
+                   Margin="0,0,16,0"/>
+
+        <Button Grid.Column="2"
+                Command="{Binding ClearHistoryCommand}"
+                Classes="SecondaryButton"
+                Margin="0,0,8,0">
+          Clear Charts
+        </Button>
+
+        <Button Grid.Column="3"
+                Command="{Binding StopBenchmarkCommand}"
+                Classes="DangerButton">
+          ■ Stop
+        </Button>
+
+      </Grid>
+    </Border>
+
+    <!-- ══════════════════════════════════════════════════════════════
+         Scrollable body
+    ══════════════════════════════════════════════════════════════ -->
+    <ScrollViewer>
+      <StackPanel Margin="24,16" Spacing="20">
+
+        <!-- ── Comparison summary cards ──────────────────────────── -->
+        <Grid ColumnDefinitions="*,24,*" RowDefinitions="Auto">
+
+          <!-- Process A card -->
+          <Border Grid.Column="0" Classes="Card">
+            <StackPanel Spacing="12">
+              <TextBlock Text="{Binding ProcessNameA}"
+                         FontSize="15" FontWeight="Bold"
+                         Foreground="#4FC3F7"
+                         HorizontalAlignment="Center"/>
+
+              <StackPanel Spacing="6">
+                <Grid ColumnDefinitions="*,*">
+                  <TextBlock Grid.Column="0" Text="CPU" Classes="MetricLabel"/>
+                  <TextBlock Grid.Column="1" Text="{Binding CpuA}" Classes="MetricValue"/>
+                </Grid>
+                <Grid ColumnDefinitions="*,*">
+                  <TextBlock Grid.Column="0" Text="Avg CPU" Classes="MetricLabel"/>
+                  <TextBlock Grid.Column="1" Text="{Binding AvgCpuA}" Classes="MetricValue"/>
+                </Grid>
+                <Grid ColumnDefinitions="*,*">
+                  <TextBlock Grid.Column="0" Text="Peak CPU" Classes="MetricLabel"/>
+                  <TextBlock Grid.Column="1" Text="{Binding PeakCpuA}" Classes="MetricValue"/>
+                </Grid>
+                <Grid ColumnDefinitions="*,*">
+                  <TextBlock Grid.Column="0" Text="RAM" Classes="MetricLabel"/>
+                  <TextBlock Grid.Column="1" Text="{Binding RamA}" Classes="MetricValue"/>
+                </Grid>
+                <Grid ColumnDefinitions="*,*">
+                  <TextBlock Grid.Column="0" Text="Threads" Classes="MetricLabel"/>
+                  <TextBlock Grid.Column="1" Text="{Binding ThreadsA}" Classes="MetricValue"/>
+                </Grid>
+                <Grid ColumnDefinitions="*,*">
+                  <TextBlock Grid.Column="0" Text="Handles" Classes="MetricLabel"/>
+                  <TextBlock Grid.Column="1" Text="{Binding HandlesA}" Classes="MetricValue"/>
+                </Grid>
+              </StackPanel>
+
+              <Separator Background="#333355"/>
+
+              <StackPanel Spacing="6">
+                <Grid ColumnDefinitions="*,*">
+                  <TextBlock Grid.Column="0" Text="I/O Read" Classes="MetricLabel"/>
+                  <TextBlock Grid.Column="1" Text="{Binding IoReadA}" Classes="MetricValue"/>
+                </Grid>
+                <Grid ColumnDefinitions="*,*">
+                  <TextBlock Grid.Column="0" Text="I/O Write" Classes="MetricLabel"/>
+                  <TextBlock Grid.Column="1" Text="{Binding IoWriteA}" Classes="MetricValue"/>
+                </Grid>
+                <Grid ColumnDefinitions="*,*">
+                  <TextBlock Grid.Column="0" Text="Uptime" Classes="MetricLabel"/>
+                  <TextBlock Grid.Column="1" Text="{Binding UptimeA}" Classes="MetricValue"/>
+                </Grid>
+              </StackPanel>
+            </StackPanel>
+          </Border>
+
+          <!-- Process B card -->
+          <Border Grid.Column="2" Classes="Card">
+            <StackPanel Spacing="12">
+              <TextBlock Text="{Binding ProcessNameB}"
+                         FontSize="15" FontWeight="Bold"
+                         Foreground="#FFB74D"
+                         HorizontalAlignment="Center"/>
+
+              <StackPanel Spacing="6">
+                <Grid ColumnDefinitions="*,*">
+                  <TextBlock Grid.Column="0" Text="CPU" Classes="MetricLabel"/>
+                  <TextBlock Grid.Column="1" Text="{Binding CpuB}" Classes="MetricValueB"/>
+                </Grid>
+                <Grid ColumnDefinitions="*,*">
+                  <TextBlock Grid.Column="0" Text="Avg CPU" Classes="MetricLabel"/>
+                  <TextBlock Grid.Column="1" Text="{Binding AvgCpuB}" Classes="MetricValueB"/>
+                </Grid>
+                <Grid ColumnDefinitions="*,*">
+                  <TextBlock Grid.Column="0" Text="Peak CPU" Classes="MetricLabel"/>
+                  <TextBlock Grid.Column="1" Text="{Binding PeakCpuB}" Classes="MetricValueB"/>
+                </Grid>
+                <Grid ColumnDefinitions="*,*">
+                  <TextBlock Grid.Column="0" Text="RAM" Classes="MetricLabel"/>
+                  <TextBlock Grid.Column="1" Text="{Binding RamB}" Classes="MetricValueB"/>
+                </Grid>
+                <Grid ColumnDefinitions="*,*">
+                  <TextBlock Grid.Column="0" Text="Threads" Classes="MetricLabel"/>
+                  <TextBlock Grid.Column="1" Text="{Binding ThreadsB}" Classes="MetricValueB"/>
+                </Grid>
+                <Grid ColumnDefinitions="*,*">
+                  <TextBlock Grid.Column="0" Text="Handles" Classes="MetricLabel"/>
+                  <TextBlock Grid.Column="1" Text="{Binding HandlesB}" Classes="MetricValueB"/>
+                </Grid>
+              </StackPanel>
+
+              <Separator Background="#333355"/>
+
+              <StackPanel Spacing="6">
+                <Grid ColumnDefinitions="*,*">
+                  <TextBlock Grid.Column="0" Text="I/O Read" Classes="MetricLabel"/>
+                  <TextBlock Grid.Column="1" Text="{Binding IoReadB}" Classes="MetricValueB"/>
+                </Grid>
+                <Grid ColumnDefinitions="*,*">
+                  <TextBlock Grid.Column="0" Text="I/O Write" Classes="MetricLabel"/>
+                  <TextBlock Grid.Column="1" Text="{Binding IoWriteB}" Classes="MetricValueB"/>
+                </Grid>
+                <Grid ColumnDefinitions="*,*">
+                  <TextBlock Grid.Column="0" Text="Uptime" Classes="MetricLabel"/>
+                  <TextBlock Grid.Column="1" Text="{Binding UptimeB}" Classes="MetricValueB"/>
+                </Grid>
+              </StackPanel>
+            </StackPanel>
+          </Border>
+        </Grid>
+
+        <!-- ── CPU Chart ──────────────────────────────────────────── -->
+        <Border Classes="Card">
+          <StackPanel Spacing="8">
+            <TextBlock Text="CPU Usage (%)"
+                       FontSize="13" FontWeight="SemiBold"
+                       Foreground="#AAAACC"/>
+            <lvc:CartesianChart
+                Series="{Binding CpuSeries}"
+                XAxes="{Binding DateTimeAxes}"
+                Height="180"
+                Background="Transparent"/>
+          </StackPanel>
+        </Border>
+
+        <!-- ── Memory Chart ───────────────────────────────────────── -->
+        <Border Classes="Card">
+          <StackPanel Spacing="8">
+            <TextBlock Text="Memory — Working Set (MB)"
+                       FontSize="13" FontWeight="SemiBold"
+                       Foreground="#AAAACC"/>
+            <lvc:CartesianChart
+                Series="{Binding MemSeries}"
+                XAxes="{Binding DateTimeAxes}"
+                Height="180"
+                Background="Transparent"/>
+          </StackPanel>
+        </Border>
+
+        <!-- ── Thread Chart ───────────────────────────────────────── -->
+        <Border Classes="Card">
+          <StackPanel Spacing="8">
+            <TextBlock Text="Thread Count"
+                       FontSize="13" FontWeight="SemiBold"
+                       Foreground="#AAAACC"/>
+            <lvc:CartesianChart
+                Series="{Binding ThreadSeries}"
+                XAxes="{Binding DateTimeAxes}"
+                Height="160"
+                Background="Transparent"/>
+          </StackPanel>
+        </Border>
+
+      </StackPanel>
+    </ScrollViewer>
+
+  </DockPanel>
+
+</UserControl>

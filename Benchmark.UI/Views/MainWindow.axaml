@@ -1,0 +1,101 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Benchmark.UI.ViewModels"
+        xmlns:views="using:Benchmark.UI.Views"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        x:Class="Benchmark.UI.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="BenchmarkTool — Process Performance Analyser"
+        Width="1280" Height="800"
+        MinWidth="1024" MinHeight="640"
+        WindowStartupLocation="CenterScreen"
+        Background="#1A1A2E">
+
+  <Grid ColumnDefinitions="220,*">
+
+    <!-- ══════════════════════════════════════════════════════════════
+         Sidebar navigation
+    ══════════════════════════════════════════════════════════════ -->
+    <Border Grid.Column="0"
+            Background="#16213E"
+            BorderBrush="#0F3460"
+            BorderThickness="0,0,1,0">
+      <DockPanel>
+
+        <!-- Logo / title -->
+        <StackPanel DockPanel.Dock="Top" Margin="20,24,20,32" Spacing="4">
+          <TextBlock Text="BenchmarkTool"
+                     FontSize="18" FontWeight="Bold"
+                     Foreground="#E94560"/>
+          <TextBlock Text="Process Performance Analyser"
+                     FontSize="10" Foreground="#8888AA"/>
+        </StackPanel>
+
+        <!-- Navigation items -->
+        <StackPanel DockPanel.Dock="Top" Margin="12,0" Spacing="4">
+
+          <Button Command="{Binding GoToProcessSelectionCommand}"
+                  Classes="NavButton"
+                  Classes.NavActive="{Binding IsOnProcessSelection}">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <TextBlock Text="⚙" FontSize="16" VerticalAlignment="Center"/>
+              <TextBlock Text="Process Setup" VerticalAlignment="Center"/>
+            </StackPanel>
+          </Button>
+
+          <Button Command="{Binding GoToDashboardCommand}"
+                  Classes="NavButton"
+                  Classes.NavActive="{Binding IsOnDashboard}">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <TextBlock Text="📊" FontSize="16" VerticalAlignment="Center"/>
+              <TextBlock Text="Live Dashboard" VerticalAlignment="Center"/>
+            </StackPanel>
+          </Button>
+
+          <Button Command="{Binding GoToExportCommand}"
+                  Classes="NavButton"
+                  Classes.NavActive="{Binding IsOnExport}">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+              <TextBlock Text="💾" FontSize="16" VerticalAlignment="Center"/>
+              <TextBlock Text="Export Results" VerticalAlignment="Center"/>
+            </StackPanel>
+          </Button>
+        </StackPanel>
+
+        <!-- Version footer -->
+        <TextBlock DockPanel.Dock="Bottom"
+                   Margin="20,0,20,16"
+                   Text="v1.0.0-mvp"
+                   FontSize="10"
+                   Foreground="#555577"
+                   HorizontalAlignment="Left"/>
+
+      </DockPanel>
+    </Border>
+
+    <!-- ══════════════════════════════════════════════════════════════
+         Main content area — switches between pages
+    ══════════════════════════════════════════════════════════════ -->
+    <Panel Grid.Column="1">
+
+      <!-- Process Selection page -->
+      <Panel IsVisible="{Binding IsOnProcessSelection}">
+        <views:ProcessSelectionView DataContext="{Binding ProcessSelection}"/>
+      </Panel>
+
+      <!-- Dashboard page -->
+      <Panel IsVisible="{Binding IsOnDashboard}">
+        <views:DashboardView DataContext="{Binding Dashboard}"/>
+      </Panel>
+
+      <!-- Export page -->
+      <Panel IsVisible="{Binding IsOnExport}">
+        <views:ExportView DataContext="{Binding Export}"/>
+      </Panel>
+
+    </Panel>
+  </Grid>
+
+</Window>

@@ -1,0 +1,12 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="Benchmark.UI.App"
+             xmlns:local="using:Benchmark.UI"
+             RequestedThemeVariant="Dark">
+
+  <Application.Styles>
+    <FluentTheme />
+    <StyleInclude Source="avares://Benchmark.UI/Assets/AppStyles.axaml"/>
+  </Application.Styles>
+
+</Application>

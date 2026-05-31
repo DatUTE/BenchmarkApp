@@ -1,0 +1,109 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Benchmark.UI.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="Benchmark.UI.Views.ExportView"
+             x:DataType="vm:ExportViewModel">
+
+  <StackPanel Margin="32,28" Spacing="24" MaxWidth="600">
+
+    <!-- ── Page header ───────────────────────────────────────────── -->
+    <StackPanel Spacing="4">
+      <TextBlock Text="Export Results"
+                 FontSize="24" FontWeight="Bold" Foreground="#E2E2F0"/>
+      <TextBlock Text="Save benchmark session data to CSV or JSON."
+                 FontSize="13" Foreground="#8888AA"/>
+    </StackPanel>
+
+    <!-- ── Format selection ──────────────────────────────────────── -->
+    <Border Classes="Card">
+      <StackPanel Spacing="12">
+        <TextBlock Text="Output Format"
+                   FontSize="13" FontWeight="SemiBold"
+                   Foreground="#AAAACC"/>
+        <StackPanel Spacing="8">
+          <RadioButton IsChecked="{Binding ExportAsCsv}"
+                       GroupName="FormatGroup"
+                       Foreground="#E2E2F0">
+            <StackPanel>
+              <TextBlock Text="CSV (Comma-Separated Values)" FontSize="13"/>
+              <TextBlock Text="Spreadsheet-compatible, one row per sample"
+                         FontSize="10" Foreground="#666688"/>
+            </StackPanel>
+          </RadioButton>
+          <RadioButton IsChecked="{Binding ExportAsJson}"
+                       GroupName="FormatGroup"
+                       Foreground="#E2E2F0">
+            <StackPanel>
+              <TextBlock Text="JSON" FontSize="13"/>
+              <TextBlock Text="Structured data with full metadata"
+                         FontSize="10" Foreground="#666688"/>
+            </StackPanel>
+          </RadioButton>
+        </StackPanel>
+      </StackPanel>
+    </Border>
+
+    <!-- ── Output path ───────────────────────────────────────────── -->
+    <Border Classes="Card">
+      <StackPanel Spacing="10">
+        <TextBlock Text="Output File"
+                   FontSize="13" FontWeight="SemiBold"
+                   Foreground="#AAAACC"/>
+        <Grid ColumnDefinitions="*,8,Auto">
+          <TextBox Grid.Column="0"
+                   Text="{Binding OutputPath}"
+                   Watermark="Select output file path…"
+                   IsReadOnly="True"
+                   Classes="SearchBox"/>
+          <Button Grid.Column="2"
+                  Command="{Binding BrowseOutputPathCommand}"
+                  Classes="SecondaryButton">
+            Browse…
+          </Button>
+        </Grid>
+      </StackPanel>
+    </Border>
+
+    <!-- ── Status / success ──────────────────────────────────────── -->
+    <Border Classes="Card"
+            Background="#1A3A1A"
+            IsVisible="{Binding ExportSuccess}">
+      <TextBlock Text="{Binding StatusMessage}"
+                 Foreground="#4CAF50"
+                 FontSize="13"
+                 TextWrapping="Wrap"/>
+    </Border>
+
+    <TextBlock Text="{Binding StatusMessage}"
+               Foreground="#8888AA"
+               FontSize="12"
+               TextWrapping="Wrap"
+               IsVisible="{Binding !ExportSuccess}"/>
+
+    <!-- ── Export button ─────────────────────────────────────────── -->
+    <Button Command="{Binding ExportCommand}"
+            Classes="PrimaryButton"
+            Width="200" Height="40"
+            HorizontalAlignment="Left">
+      <Panel>
+        <TextBlock Text="💾  Export Session"
+                   FontSize="13" FontWeight="SemiBold"
+                   IsVisible="{Binding !IsExporting}"
+                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <TextBlock Text="Exporting…"
+                   FontSize="13"
+                   IsVisible="{Binding IsExporting}"
+                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+      </Panel>
+    </Button>
+
+    <ProgressBar IsIndeterminate="True"
+                 IsVisible="{Binding IsExporting}"
+                 Height="4"/>
+
+  </StackPanel>
+
+</UserControl>
