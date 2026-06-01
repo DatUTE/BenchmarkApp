@@ -63,7 +63,7 @@ public sealed class ExportService : IExportService
         await writer.WriteLineAsync($"# Started:    {session.StartedAt:O}");
         await writer.WriteLineAsync($"# Duration:   {session.Duration}");
         await writer.WriteLineAsync($"# Process A:  {session.ProcessA}");
-        await writer.WriteLineAsync($"# Process B:  {session.ProcessB}");
+        await writer.WriteLineAsync($"# Process B:  {session.ProcessB?.ToString() ?? "N/A (single mode)"}");
         await writer.WriteLineAsync();
 
         // Header row
@@ -118,7 +118,8 @@ public sealed class ExportService : IExportService
             endedAt    = session.EndedAt,
             duration   = session.Duration.TotalSeconds,
             processA   = new { session.ProcessA.ProcessId, session.ProcessA.Name },
-            processB   = new { session.ProcessB.ProcessId, session.ProcessB.Name },
+            processB   = session.ProcessB is null ? null
+                             : (object)new { session.ProcessB.ProcessId, session.ProcessB.Name },
             snapshotsA = session.SnapshotsA.Select(MapSnapshot),
             snapshotsB = session.SnapshotsB.Select(MapSnapshot),
         };

@@ -10,6 +10,16 @@ using Benchmark.Models;
 
 namespace Benchmark.UI.Services;
 
+/// <summary>Determines whether one or two processes are benchmarked.</summary>
+public enum BenchmarkMode
+{
+    /// <summary>Monitor a single process; no Process B.</summary>
+    Single,
+
+    /// <summary>Monitor two processes side-by-side for comparison.</summary>
+    Compare,
+}
+
 /// <summary>
 /// Manages the lifecycle of a two-process benchmark session.
 /// Emits <see cref="SnapshotsUpdated"/> after each sampling cycle so
@@ -17,6 +27,9 @@ namespace Benchmark.UI.Services;
 /// </summary>
 public interface IBenchmarkService
 {
+    /// <summary>Gets the active benchmark mode.</summary>
+    BenchmarkMode Mode { get; }
+
     /// <summary>Gets whether a benchmark session is currently active.</summary>
     bool IsRunning { get; }
 
@@ -30,12 +43,11 @@ public interface IBenchmarkService
     event EventHandler<SnapshotPair>? SnapshotsUpdated;
 
     /// <summary>
-    /// Starts background monitoring for both processes.
-    /// Creates a new <see cref="BenchmarkSession"/> and begins sampling.
+    /// Starts background monitoring. In <see cref="BenchmarkMode.Compare"/> mode
+    /// both processes are required; in <see cref="BenchmarkMode.Single"/> mode
+    /// <paramref name="processB"/> must be <c>null</c>.
     /// </summary>
-    /// <param name="processA">The first process to monitor.</param>
-    /// <param name="processB">The second process to monitor.</param>
-    Task StartAsync(ProcessInfo processA, ProcessInfo processB);
+    Task StartAsync(ProcessInfo processA, ProcessInfo? processB, BenchmarkMode mode);
 
     /// <summary>
     /// Stops monitoring and marks the current session as ended.
@@ -50,7 +62,7 @@ public interface IBenchmarkService
 }
 
 /// <summary>
-/// A paired snapshot from both monitored processes, emitted together
-/// to guarantee temporal alignment in the UI.
+/// A paired snapshot emitted after each sampling cycle.
+/// <see cref="B"/> is <c>null</c> in <see cref="BenchmarkMode.Single"/> sessions.
 /// </summary>
-public sealed record SnapshotPair(MetricSnapshot A, MetricSnapshot B);
+public sealed record SnapshotPair(MetricSnapshot A, MetricSnapshot? B);

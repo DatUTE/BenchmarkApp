@@ -1,5 +1,6 @@
 <Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:system="using:System">
 
   <!-- ════════════════════════════════════════════════════════════════
        Card panels
@@ -40,6 +41,15 @@
     <Setter Property="Background" Value="#0F3460"/>
     <Setter Property="Foreground" Value="#4FC3F7"/>
     <Setter Property="FontWeight" Value="SemiBold"/>
+  </Style>
+
+  <!-- Listing-mode tabs (Process / Group / Tree) — centered, auto width -->
+  <Style Selector="Button.NavButton.NavTab">
+    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="Width" Value="{x:Static system:Double.NaN}"/>
+    <Setter Property="MinWidth" Value="130"/>
+    <Setter Property="Padding" Value="14,0"/>
   </Style>
 
   <!-- ════════════════════════════════════════════════════════════════

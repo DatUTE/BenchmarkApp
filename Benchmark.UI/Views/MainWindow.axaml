@@ -22,10 +22,10 @@
             Background="#16213E"
             BorderBrush="#0F3460"
             BorderThickness="0,0,1,0">
-      <DockPanel>
+      <Grid RowDefinitions="Auto,*,Auto">
 
         <!-- Logo / title -->
-        <StackPanel DockPanel.Dock="Top" Margin="20,24,20,32" Spacing="4">
+        <StackPanel Grid.Row="0" Margin="20,24,20,32" Spacing="4">
           <TextBlock Text="BenchmarkTool"
                      FontSize="18" FontWeight="Bold"
                      Foreground="#E94560"/>
@@ -34,7 +34,10 @@
         </StackPanel>
 
         <!-- Navigation items -->
-        <StackPanel DockPanel.Dock="Top" Margin="12,0" Spacing="4">
+        <StackPanel Grid.Row="1"
+                    Margin="12,0"
+                    Spacing="4"
+                    VerticalAlignment="Top">
 
           <Button Command="{Binding GoToProcessSelectionCommand}"
                   Classes="NavButton"
@@ -65,14 +68,15 @@
         </StackPanel>
 
         <!-- Version footer -->
-        <TextBlock DockPanel.Dock="Bottom"
+        <TextBlock Grid.Row="2"
                    Margin="20,0,20,16"
                    Text="v1.0.0-mvp"
                    FontSize="10"
                    Foreground="#555577"
-                   HorizontalAlignment="Left"/>
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Bottom"/>
 
-      </DockPanel>
+      </Grid>
     </Border>
 
     <!-- ══════════════════════════════════════════════════════════════

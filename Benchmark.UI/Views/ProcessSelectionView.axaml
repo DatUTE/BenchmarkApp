@@ -8,54 +8,163 @@
              x:DataType="vm:ProcessSelectionViewModel">
 
   <ScrollViewer>
-    <StackPanel Margin="32,28" Spacing="24">
+    <StackPanel Margin="32,28" Spacing="20">
 
       <!-- ── Page header ─────────────────────────────────────────── -->
       <StackPanel Spacing="4">
         <TextBlock Text="Process Setup"
                    FontSize="24" FontWeight="Bold" Foreground="#E2E2F0"/>
-        <TextBlock Text="Select two processes to compare side-by-side."
+        <TextBlock Text="{Binding ModeSubtitle}"
                    FontSize="13" Foreground="#8888AA"/>
       </StackPanel>
 
-      <!-- ── Refresh + status ────────────────────────────────────── -->
-      <Grid ColumnDefinitions="Auto,*,Auto">
-        <Button Grid.Column="0"
-                Command="{Binding RefreshProcessesCommand}"
-                Classes="ActionButton">
-          <StackPanel Orientation="Horizontal" Spacing="6">
-            <TextBlock Text="↻" FontSize="14"/>
-            <TextBlock Text="Refresh"/>
+      <!-- ── Mode selector ──────────────────────────────────────── -->
+      <Border Classes="Card" Padding="6">
+        <StackPanel Orientation="Horizontal" Spacing="6">
+          <Button Command="{Binding SetSingleModeCommand}"
+                  Classes="NavButton"
+                  Classes.NavActive="{Binding IsSingleMode}"
+                  Width="140" Height="36">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <TextBlock Text="▣" FontSize="13"/>
+              <TextBlock Text="Single App" FontSize="13"/>
+            </StackPanel>
+          </Button>
+          <Button Command="{Binding SetCompareModeCommand}"
+                  Classes="NavButton"
+                  Classes.NavActive="{Binding IsCompareMode}"
+                  Width="140" Height="36">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <TextBlock Text="⊞" FontSize="13"/>
+              <TextBlock Text="Compare" FontSize="13"/>
+            </StackPanel>
+          </Button>
+        </StackPanel>
+      </Border>
+
+      <!-- ── Listing mode selector ──────────────────────────────── -->
+      <Border Classes="Card" Padding="6">
+        <Grid ColumnDefinitions="Auto,Auto,Auto,*,Auto">
+
+          <!-- Process -->
+          <Button Grid.Column="0"
+                  Command="{Binding SetListProcessCommand}"
+                  Classes="NavButton NavTab"
+                  Classes.NavActive="{Binding IsListProcess}"
+                  Height="34"
+                  ToolTip.Tip="Show each OS process as a separate entry">
+            <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center">
+              <TextBlock Text="○" FontSize="12"/>
+              <TextBlock Text="Process" FontSize="12"/>
+            </StackPanel>
+          </Button>
+
+          <!-- Group -->
+          <Button Grid.Column="1"
+                  Command="{Binding SetListGroupCommand}"
+                  Classes="NavButton NavTab"
+                  Classes.NavActive="{Binding IsListGroup}"
+                  Height="34"
+                  Margin="4,0,0,0"
+                  ToolTip.Tip="Collapse all instances of the same executable into one entry and aggregate metrics">
+            <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center">
+              <TextBlock Text="⊟" FontSize="12"/>
+              <TextBlock Text="Process Group" FontSize="12"/>
+            </StackPanel>
+          </Button>
+
+          <!-- Tree -->
+          <Button Grid.Column="2"
+                  Command="{Binding SetListTreeCommand}"
+                  Classes="NavButton NavTab"
+                  Classes.NavActive="{Binding IsListTree}"
+                  Height="34"
+                  Margin="4,0,0,0"
+                  ToolTip.Tip="Show child-process count. Selecting a process monitors its entire subtree (like Task Manager)">
+            <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Center">
+              <TextBlock Text="⊞" FontSize="12"/>
+              <TextBlock Text="Process Tree" FontSize="12"/>
+            </StackPanel>
+          </Button>
+
+          <!-- Refresh + status -->
+          <StackPanel Grid.Column="3" Orientation="Horizontal" Spacing="8"
+                      HorizontalAlignment="Right" VerticalAlignment="Center">
+            <TextBlock Text="{Binding StatusMessage}"
+                       Foreground="#8888AA" FontSize="11"
+                       VerticalAlignment="Center"/>
+            <ProgressBar IsVisible="{Binding IsLoading}"
+                         IsIndeterminate="True"
+                         Width="80" Height="3"/>
           </StackPanel>
+
+          <Button Grid.Column="4"
+                  Command="{Binding RefreshProcessesCommand}"
+                  Classes="ActionButton"
+                  Margin="8,0,0,0">
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <TextBlock Text="↻" FontSize="14"/>
+              <TextBlock Text="Refresh"/>
+            </StackPanel>
+          </Button>
+
+        </Grid>
+      </Border>
+
+      <!-- ══════════════════════════════════════════════════════════
+           SINGLE MODE — one full-width picker
+      ══════════════════════════════════════════════════════════ -->
+      <StackPanel IsVisible="{Binding IsSingleMode}" Spacing="8">
+        <TextBlock Text="Application"
+                   FontSize="14" FontWeight="SemiBold"
+                   Foreground="#4FC3F7"/>
+        <TextBox Text="{Binding SearchTextA}"
+                 Watermark="Filter processes…"
+                 Classes="SearchBox"/>
+        <Border Classes="Card" Height="300">
+          <ListBox ItemsSource="{Binding FilteredProcessesA}"
+                   SelectedItem="{Binding SelectedProcessA}"
+                   Background="Transparent"
+                   ScrollViewer.VerticalScrollBarVisibility="Auto">
+            <ListBox.ItemTemplate>
+              <DataTemplate>
+                <StackPanel Margin="4,2">
+                  <TextBlock Text="{Binding Name}"
+                             FontSize="12" Foreground="#E2E2F0"/>
+                  <TextBlock Text="{Binding DisplaySubtitle}"
+                             FontSize="10" Foreground="#666688"/>
+                </StackPanel>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+        </Border>
+        <TextBlock FontSize="12" Foreground="#4FC3F7">
+          <TextBlock.Text>
+            <MultiBinding StringFormat="Selected: {0}">
+              <Binding Path="SelectedProcessA" TargetNullValue="(none)"/>
+            </MultiBinding>
+          </TextBlock.Text>
+        </TextBlock>
+        <Button Command="{Binding BrowseExecutableACommand}"
+                Classes="SecondaryButton">
+          Browse Executable…
         </Button>
+      </StackPanel>
 
-        <TextBlock Grid.Column="1"
-                   Text="{Binding StatusMessage}"
-                   VerticalAlignment="Center"
-                   Margin="12,0"
-                   Foreground="#8888AA" FontSize="12"/>
+      <!-- ══════════════════════════════════════════════════════════
+           COMPARE MODE — two side-by-side pickers
+      ══════════════════════════════════════════════════════════ -->
+      <Grid IsVisible="{Binding IsCompareMode}"
+            ColumnDefinitions="*,24,*">
 
-        <ProgressBar Grid.Column="2"
-                     IsVisible="{Binding IsLoading}"
-                     IsIndeterminate="True"
-                     Width="120" Height="4"/>
-      </Grid>
-
-      <!-- ── Two-column process pickers ──────────────────────────── -->
-      <Grid ColumnDefinitions="*,24,*" RowDefinitions="Auto,*">
-
-        <!-- ── Process A ────────────────────────────────────── -->
+        <!-- Process A -->
         <StackPanel Grid.Column="0" Spacing="8">
           <TextBlock Text="Application A"
                      FontSize="14" FontWeight="SemiBold"
                      Foreground="#4FC3F7"/>
-
-          <!-- Search bar -->
           <TextBox Text="{Binding SearchTextA}"
                    Watermark="Filter processes…"
                    Classes="SearchBox"/>
-
-          <!-- Process list -->
           <Border Classes="Card" Height="280">
             <ListBox ItemsSource="{Binding FilteredProcessesA}"
                      SelectedItem="{Binding SelectedProcessA}"
@@ -73,8 +182,6 @@
               </ListBox.ItemTemplate>
             </ListBox>
           </Border>
-
-          <!-- Selected indicator -->
           <TextBlock FontSize="12" Foreground="#4FC3F7">
             <TextBlock.Text>
               <MultiBinding StringFormat="Selected: {0}">
@@ -82,30 +189,26 @@
               </MultiBinding>
             </TextBlock.Text>
           </TextBlock>
-
-          <!-- Browse button -->
           <Button Command="{Binding BrowseExecutableACommand}"
                   Classes="SecondaryButton">
             Browse Executable…
           </Button>
         </StackPanel>
 
-        <!-- ── Divider ────────────────────────────────────────── -->
+        <!-- Divider -->
         <Border Grid.Column="1"
                 Width="1"
                 Background="#333355"
                 VerticalAlignment="Stretch"/>
 
-        <!-- ── Process B ────────────────────────────────────── -->
+        <!-- Process B -->
         <StackPanel Grid.Column="2" Spacing="8">
           <TextBlock Text="Application B"
                      FontSize="14" FontWeight="SemiBold"
                      Foreground="#FFB74D"/>
-
           <TextBox Text="{Binding SearchTextB}"
                    Watermark="Filter processes…"
                    Classes="SearchBox"/>
-
           <Border Classes="Card" Height="280">
             <ListBox ItemsSource="{Binding FilteredProcessesB}"
                      SelectedItem="{Binding SelectedProcessB}"
@@ -123,7 +226,6 @@
               </ListBox.ItemTemplate>
             </ListBox>
           </Border>
-
           <TextBlock FontSize="12" Foreground="#FFB74D">
             <TextBlock.Text>
               <MultiBinding StringFormat="Selected: {0}">
@@ -131,7 +233,6 @@
               </MultiBinding>
             </TextBlock.Text>
           </TextBlock>
-
           <Button Command="{Binding BrowseExecutableBCommand}"
                   Classes="SecondaryButton">
             Browse Executable…

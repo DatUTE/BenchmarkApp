@@ -65,6 +65,10 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
     [ObservableProperty] private string uptimeB       = "—";
     [ObservableProperty] private string statusMessage = "Waiting for benchmark session…";
     [ObservableProperty] private bool   isRunning;
+    [ObservableProperty] private bool   isSingleMode;
+
+    /// <summary>Gets whether Compare mode is active (convenience inverse of IsSingleMode).</summary>
+    public bool IsCompareMode => !IsSingleMode;
 
     // ── Chart series ─────────────────────────────────────────────────────────
 
@@ -144,11 +148,10 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
 
     private void OnSnapshotsUpdated(object? sender, SnapshotPair pair)
     {
-        // Dispatch UI updates to the Avalonia UI thread
         Dispatcher.UIThread.Post(() => ApplySnapshots(pair.A, pair.B));
     }
 
-    private void ApplySnapshots(MetricSnapshot a, MetricSnapshot b)
+    private void ApplySnapshots(MetricSnapshot a, MetricSnapshot? b)
     {
         IsRunning     = true;
         StatusMessage = $"Running · Last sample: {DateTime.Now:HH:mm:ss}";
@@ -157,41 +160,46 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
 
         // ── CPU
         AppendRolling(cpuHistoryA_, new DateTimePoint(now, a.CpuPercent));
-        AppendRolling(cpuHistoryB_, new DateTimePoint(now, b.CpuPercent));
         CpuA     = $"{a.CpuPercent:F1}%";
-        CpuB     = $"{b.CpuPercent:F1}%";
         AvgCpuA  = $"{a.AverageCpuPercent:F1}%";
-        AvgCpuB  = $"{b.AverageCpuPercent:F1}%";
         PeakCpuA = $"{a.PeakCpuPercent:F1}%";
-        PeakCpuB = $"{b.PeakCpuPercent:F1}%";
 
-        // ── Memory
-        double memAmb = a.WorkingSetBytes / (1024.0 * 1024);
-        double memBmb = b.WorkingSetBytes / (1024.0 * 1024);
-        AppendRolling(memHistoryA_, new DateTimePoint(now, memAmb));
-        AppendRolling(memHistoryB_, new DateTimePoint(now, memBmb));
-        RamA     = a.WorkingSetFormatted;
-        RamB     = b.WorkingSetFormatted;
+        // ── Memory  (primary = Private Working Set, matches Task Manager)
+        AppendRolling(memHistoryA_, new DateTimePoint(now, a.PrivateWorkingSetBytes / (1024.0 * 1024)));
+        RamA     = a.PrivateWorkingSetFormatted;
         PrivateA = a.PrivateBytesFormatted;
-        PrivateB = b.PrivateBytesFormatted;
 
-        // ── Threads
+        // ── Threads / Handles
         AppendRolling(threadHistoryA_, new DateTimePoint(now, a.ThreadCount));
-        AppendRolling(threadHistoryB_, new DateTimePoint(now, b.ThreadCount));
         ThreadsA = a.ThreadCount.ToString();
-        ThreadsB = b.ThreadCount.ToString();
         HandlesA = a.HandleCount.ToString();
-        HandlesB = b.HandleCount.ToString();
 
         // ── I/O
         IoReadA  = FormatBytes(a.IoReadBytes);
-        IoReadB  = FormatBytes(b.IoReadBytes);
         IoWriteA = FormatBytes(a.IoWriteBytes);
-        IoWriteB = FormatBytes(b.IoWriteBytes);
 
         // ── Uptime
         UptimeA = FormatUptime(a.Uptime);
-        UptimeB = FormatUptime(b.Uptime);
+
+        if (b is not null)
+        {
+            AppendRolling(cpuHistoryB_, new DateTimePoint(now, b.CpuPercent));
+            CpuB     = $"{b.CpuPercent:F1}%";
+            AvgCpuB  = $"{b.AverageCpuPercent:F1}%";
+            PeakCpuB = $"{b.PeakCpuPercent:F1}%";
+
+            AppendRolling(memHistoryB_, new DateTimePoint(now, b.PrivateWorkingSetBytes / (1024.0 * 1024)));
+            RamB     = b.PrivateWorkingSetFormatted;
+            PrivateB = b.PrivateBytesFormatted;
+
+            AppendRolling(threadHistoryB_, new DateTimePoint(now, b.ThreadCount));
+            ThreadsB = b.ThreadCount.ToString();
+            HandlesB = b.HandleCount.ToString();
+
+            IoReadB  = FormatBytes(b.IoReadBytes);
+            IoWriteB = FormatBytes(b.IoWriteBytes);
+            UptimeB  = FormatUptime(b.Uptime);
+        }
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
@@ -201,8 +209,10 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
         var session = benchmarkService_.CurrentSession;
         if (session is null) return;
 
+        IsSingleMode = benchmarkService_.Mode == BenchmarkMode.Single;
         ProcessNameA = session.ProcessA.Name;
-        ProcessNameB = session.ProcessB.Name;
+        ProcessNameB = session.ProcessB?.Name ?? string.Empty;
+        OnPropertyChanged(nameof(IsCompareMode));
     }
 
     private static void AppendRolling(

@@ -31,6 +31,7 @@ internal struct NativeMetricsSnapshot
     public ulong  WorkingSetBytes;
     public ulong  PrivateBytes;
     public ulong  PeakWorkingSetBytes;
+    public ulong  PrivateWorkingSetBytes;
 
     // Threads & Handles
     public uint   ThreadCount;

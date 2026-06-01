@@ -28,8 +28,11 @@ public sealed class BenchmarkSession
     /// <summary>Gets the process information for Application A.</summary>
     public required ProcessInfo ProcessA { get; init; }
 
-    /// <summary>Gets the process information for Application B.</summary>
-    public required ProcessInfo ProcessB { get; init; }
+    /// <summary>
+    /// Gets the process information for Application B.
+    /// <c>null</c> when the session runs in <see cref="BenchmarkMode.Single"/> mode.
+    /// </summary>
+    public ProcessInfo? ProcessB { get; init; }
 
     /// <summary>Gets a thread-safe snapshot of all collected metrics for Application A.</summary>
     public IReadOnlyList<MetricSnapshot> SnapshotsA

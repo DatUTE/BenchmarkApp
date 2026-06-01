@@ -31,9 +31,10 @@ public:
 private:
     mutable std::mutex mutex_;
 
-    uint64_t workingSetBytes_     { 0 };
-    uint64_t privateBytes_        { 0 };
-    uint64_t peakWorkingSetBytes_ { 0 };
+    uint64_t workingSetBytes_        { 0 };
+    uint64_t privateBytes_           { 0 };
+    uint64_t peakWorkingSetBytes_    { 0 };
+    uint64_t privateWorkingSetBytes_ { 0 };
 };
 
 } // namespace Benchmark::Core

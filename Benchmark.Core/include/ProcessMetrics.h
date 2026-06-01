@@ -35,7 +35,7 @@ struct ProcessMetricsSnapshot
     double peakCpuPercent;
 
     // ── Memory ───────────────────────────────────────────────────────────────
-    /** @brief Current working set (physical RAM consumed) in bytes. */
+    /** @brief Current working set (physical RAM consumed) in bytes, including shared pages. */
     uint64_t workingSetBytes;
 
     /** @brief Private committed bytes (virtual memory exclusively owned by this process). */
@@ -43,6 +43,13 @@ struct ProcessMetricsSnapshot
 
     /** @brief Peak working set in bytes (since process start, from OS). */
     uint64_t peakWorkingSetBytes;
+
+    /**
+     * @brief Private working set in bytes — RAM physically consumed by this process
+     *        excluding shared pages.  Matches the "Memory" column in Windows Task Manager.
+     *        Computed via QueryWorkingSet() by counting non-shared pages × page size.
+     */
+    uint64_t privateWorkingSetBytes;
 
     // ── Threads & Handles ───────────────────────────────────────────────────
     /** @brief Current number of threads. */

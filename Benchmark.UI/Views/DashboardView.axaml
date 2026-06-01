@@ -55,7 +55,7 @@
     <ScrollViewer>
       <StackPanel Margin="24,16" Spacing="20">
 
-        <!-- ── Comparison summary cards ──────────────────────────── -->
+        <!-- ── Summary cards — single col when IsSingleMode ─────── -->
         <Grid ColumnDefinitions="*,24,*" RowDefinitions="Auto">
 
           <!-- Process A card -->
@@ -112,8 +112,9 @@
             </StackPanel>
           </Border>
 
-          <!-- Process B card -->
-          <Border Grid.Column="2" Classes="Card">
+          <!-- Process B card — hidden in Single mode -->
+          <Border Grid.Column="2" Classes="Card"
+                  IsVisible="{Binding IsCompareMode}">
             <StackPanel Spacing="12">
               <TextBlock Text="{Binding ProcessNameB}"
                          FontSize="15" FontWeight="Bold"
@@ -184,7 +185,7 @@
         <!-- ── Memory Chart ───────────────────────────────────────── -->
         <Border Classes="Card">
           <StackPanel Spacing="8">
-            <TextBlock Text="Memory — Working Set (MB)"
+            <TextBlock Text="Memory — Private Working Set (MB)"
                        FontSize="13" FontWeight="SemiBold"
                        Foreground="#AAAACC"/>
             <lvc:CartesianChart

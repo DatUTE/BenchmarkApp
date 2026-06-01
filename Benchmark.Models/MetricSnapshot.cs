@@ -42,6 +42,13 @@ public sealed record MetricSnapshot
     /// <summary>Peak working set in bytes (since process start).</summary>
     public long PeakWorkingSetBytes { get; init; }
 
+    /// <summary>
+    /// Private working set in bytes — RAM consumed exclusively by this process,
+    /// excluding shared pages (DLLs mapped by multiple processes).
+    /// Matches the "Memory" column shown in Windows Task Manager.
+    /// </summary>
+    public long PrivateWorkingSetBytes { get; init; }
+
     // ── Threads & Handles ────────────────────────────────────────────────────
 
     /// <summary>Current thread count.</summary>
@@ -73,6 +80,9 @@ public sealed record MetricSnapshot
 
     /// <summary>Private bytes formatted as a human-readable string.</summary>
     public string PrivateBytesFormatted => FormatBytes(PrivateBytes);
+
+    /// <summary>Private working set formatted as a human-readable string.</summary>
+    public string PrivateWorkingSetFormatted => FormatBytes(PrivateWorkingSetBytes);
 
     private static string FormatBytes(long bytes)
     {
