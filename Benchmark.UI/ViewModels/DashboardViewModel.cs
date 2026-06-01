@@ -30,7 +30,8 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
 {
     private const int RollingWindowSize = 60;  // Keep 60 seconds of history
 
-    private readonly IBenchmarkService benchmarkService_;
+    private readonly IBenchmarkService   benchmarkService_;
+    private readonly ITemperatureService temperatureService_;
 
     // ── Rolling chart data ────────────────────────────────────────────────────
     private readonly ObservableCollection<DateTimePoint> cpuHistoryA_    = [];
@@ -63,9 +64,14 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
     [ObservableProperty] private string ioWriteB      = "—";
     [ObservableProperty] private string uptimeA       = "—";
     [ObservableProperty] private string uptimeB       = "—";
-    [ObservableProperty] private string statusMessage = "Waiting for benchmark session…";
+    [ObservableProperty] private string statusMessage   = "Waiting for benchmark session…";
     [ObservableProperty] private bool   isRunning;
     [ObservableProperty] private bool   isSingleMode;
+
+    // ── Temperature ───────────────────────────────────────────────────────────
+    [ObservableProperty] private string cpuTemp = "—";
+    [ObservableProperty] private string gpuTemp = "—";
+    [ObservableProperty] private string gpuName = "GPU";
 
     /// <summary>Gets whether Compare mode is active (convenience inverse of IsSingleMode).</summary>
     public bool IsCompareMode => !IsSingleMode;
@@ -96,9 +102,11 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
     // ── Constructor ───────────────────────────────────────────────────────────
 
     /// <summary>Initializes the dashboard and subscribes to benchmark updates.</summary>
-    public DashboardViewModel(IBenchmarkService benchmarkService)
+    public DashboardViewModel(IBenchmarkService benchmarkService,
+                              ITemperatureService temperatureService)
     {
-        benchmarkService_ = benchmarkService;
+        benchmarkService_   = benchmarkService;
+        temperatureService_ = temperatureService;
         benchmarkService_.SnapshotsUpdated += OnSnapshotsUpdated;
 
         // Build chart series with colour-coded lines for A (blue) and B (orange)
@@ -148,7 +156,20 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
 
     private void OnSnapshotsUpdated(object? sender, SnapshotPair pair)
     {
-        Dispatcher.UIThread.Post(() => ApplySnapshots(pair.A, pair.B));
+        // Read temperature on background thread (sensor I/O), then dispatch UI update
+        temperatureService_.Update();
+        Dispatcher.UIThread.Post(() =>
+        {
+            ApplyTemperature();
+            ApplySnapshots(pair.A, pair.B);
+        });
+    }
+
+    private void ApplyTemperature()
+    {
+        CpuTemp = temperatureService_.CpuTemperature is float c ? $"{c:F0} °C" : "N/A";
+        GpuTemp = temperatureService_.GpuTemperature is float g ? $"{g:F0} °C" : "N/A";
+        GpuName = temperatureService_.GpuName ?? "GPU";
     }
 
     private void ApplySnapshots(MetricSnapshot a, MetricSnapshot? b)
@@ -262,5 +283,6 @@ public sealed partial class DashboardViewModel : ViewModelBase, IDisposable
     public void Dispose()
     {
         benchmarkService_.SnapshotsUpdated -= OnSnapshotsUpdated;
+        temperatureService_.Dispose();
     }
 }

@@ -168,6 +168,36 @@
           </Border>
         </Grid>
 
+        <!-- ── Temperature card ──────────────────────────────────────── -->
+        <Border Classes="Card">
+          <Grid ColumnDefinitions="*,*">
+
+            <!-- CPU Temp -->
+            <StackPanel Grid.Column="0" Spacing="4" HorizontalAlignment="Center">
+              <TextBlock Text="CPU Temperature"
+                         FontSize="11" Foreground="#AAAACC"
+                         HorizontalAlignment="Center"/>
+              <TextBlock Text="{Binding CpuTemp}"
+                         FontSize="28" FontWeight="Bold"
+                         Foreground="#4FC3F7"
+                         HorizontalAlignment="Center"/>
+            </StackPanel>
+
+            <!-- GPU Temp -->
+            <StackPanel Grid.Column="1" Spacing="4" HorizontalAlignment="Center">
+              <TextBlock Text="{Binding GpuName}"
+                         FontSize="11" Foreground="#AAAACC"
+                         HorizontalAlignment="Center"
+                         TextTrimming="CharacterEllipsis"/>
+              <TextBlock Text="{Binding GpuTemp}"
+                         FontSize="28" FontWeight="Bold"
+                         Foreground="#FFB74D"
+                         HorizontalAlignment="Center"/>
+            </StackPanel>
+
+          </Grid>
+        </Border>
+
         <!-- ── CPU Chart ──────────────────────────────────────────── -->
         <Border Classes="Card">
           <StackPanel Spacing="8">

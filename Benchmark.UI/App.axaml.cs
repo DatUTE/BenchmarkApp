@@ -61,6 +61,7 @@ public partial class App : Application
         services.AddSingleton<IBenchmarkService,        BenchmarkService>();
         services.AddSingleton<IProcessDiscoveryService, ProcessDiscoveryService>();
         services.AddSingleton<IExportService,           ExportService>();
+        services.AddSingleton<ITemperatureService,      HardwareTemperatureService>();
 
         // ── ViewModels (singletons so they share the same service instances) ─
         services.AddSingleton<ProcessSelectionViewModel>();
